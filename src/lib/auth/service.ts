@@ -1,3 +1,5 @@
+"use server"
+
 export async function loginWithCredentials(credentials: {
     email: string;
     password: string;
@@ -13,11 +15,11 @@ export async function loginWithCredentials(credentials: {
 
         const data = await res.json();
 
-        if (data.accessToken && data.user) {
+        if (data.access_token && data.user) {
             return {
                 id: data.user.id,
                 email: data.user.email,
-                accessToken: data.accessToken,
+                accessToken: data.access_token,
             };
         }
 
