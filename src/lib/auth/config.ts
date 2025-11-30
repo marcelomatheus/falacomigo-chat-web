@@ -30,13 +30,25 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
         token.accessToken = user.accessToken;
+        token.profile = user.profile;
       }
       return token;
     },
 
     async session({ session, token }: { session: Session; token: JWT }) {
-      session.user.id = token.id;
+      session.accessToken = token.accessToken as string;
+      session.user = {
+        ...session.user,
+        id: token.id as string,
+        email: (token.email as string) ?? session.user?.email ?? "",
+        profile:
+          (token.profile as Session["user"]["profile"]) ??
+          session.user?.profile ??
+          {},
+      };
+
       return session;
     },
   },
