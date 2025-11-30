@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { ChatFeatureProps } from "./interface/component-props.interface";
 
-export default function ChatFeature({ chatId, recipientId: propRecipientId, className }: ChatFeatureProps) {
+export default function ChatFeature({ chatId, recipientId: propRecipientId, className, onBack }: ChatFeatureProps) {
   const { data: session } = useSession();
   const [activeChatId, setActiveChatId] = useState(chatId);
   const { data: chats, isLoading: isLoadingChats } = useChats();
@@ -73,6 +73,7 @@ export default function ChatFeature({ chatId, recipientId: propRecipientId, clas
         messages={messagesData?.data || []}
         currentProfileId={currentProfileId || ""}
         isLoading={isLoadingMessages}
+        onBack={onBack}
       />
     </div>
   );

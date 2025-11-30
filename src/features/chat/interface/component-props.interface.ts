@@ -4,6 +4,7 @@ export interface ChatFeatureProps {
   chatId?: string;
   recipientId?: string;
   className?: string;
+  onBack?: () => void;
 }
 
 export interface ChatFeatureMockProps {

@@ -8,14 +8,12 @@ interface MobileNavigationProps {
   currentView: "users" | "chat" | "profile";
   onViewChange: (view: "users" | "chat" | "profile") => void;
   className?: string;
-  chatListSlot?: ReactNode;
 }
 
 export function MobileNavigation({
   currentView,
   onViewChange,
   className,
-  chatListSlot,
 }: MobileNavigationProps) {
   const navItems = [
     {
@@ -42,11 +40,6 @@ export function MobileNavigation({
         className
       )}
     >
-      {chatListSlot && currentView === "chat" && (
-        <div className="border-b border-border max-h-72 overflow-y-auto">
-          {chatListSlot}
-        </div>
-      )}
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
