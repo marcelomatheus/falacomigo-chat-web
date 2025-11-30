@@ -45,8 +45,7 @@ export default function RegisterPage() {
 
         registerAction({ name, email, password })
             .then(() => router.push("/login"))
-            .catch((error) => {
-                console.log("Error: ", error)
+            .catch((_error) => {
                 setErrorMessage("Houve um erro realizando seu cadastro. Tente novamente!")
                 setTimeout(() => {
                     setErrorMessage("")
