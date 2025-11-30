@@ -3,9 +3,10 @@ import { messageApi } from "../api/message.api";
 import {
   SendMessageParams,
   FilterMessageParams,
+  MessageWithSender
 } from "../interface/message.interface";
 import { CHAT_QUERY_KEYS } from "../constants";
-import { MessageWithSender } from "../interface/message.interface";
+import { toast } from "react-toastify"; // Adicione o import do toast
 
 export const useMessages = (params?: FilterMessageParams) => {
   return useQuery({
@@ -102,6 +103,20 @@ export const useRequestCorrection = () => {
       queryClient.invalidateQueries({
         queryKey: CHAT_QUERY_KEYS.messagesByChat(data.chatId),
       });
+    },
+  });
+};
+
+export const useInterpretMessage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { content: string; senderId: string; messageId: string }) =>
+      messageApi.interpret(data),
+    onSuccess: (data) => {
+      if (data.deepCorrections && Array.isArray(data.deepCorrections) && data.deepCorrections.length > 0) {
+        toast.success("Novo aprendizado foi gerado!");
+      }
     },
   });
 };
