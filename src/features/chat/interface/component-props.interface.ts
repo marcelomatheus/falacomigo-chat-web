@@ -1,4 +1,4 @@
-import { MessageWithSender } from "./message.interface";
+import { MessageWithSender, Translation, CorrectionSuggestion } from "./message.interface";
 
 export interface ChatFeatureProps {
   chatId?: string;
@@ -71,8 +71,8 @@ export interface ChatMessageBubbleProps {
   senderName?: string;
   senderPhoto?: string | null;
   timestamp: Date;
-  translation?: Record<string, unknown> | null;
-  correctionSuggestions?: Record<string, unknown> | null;
+  translation?: Translation | null;
+  correctionSuggestions?: CorrectionSuggestion | null;
   status?: "pending" | "sent";
   onRequestTranslation?: () => void;
   onRequestCorrection?: () => void;

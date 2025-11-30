@@ -1,10 +1,27 @@
+export interface Translation {
+  originalText: string;
+  translatedText: string;
+  targetLanguage: string;
+}
+
+export interface CorrectionSuggestion {
+  suggestionText: string;
+  reason: string;
+}
+
+export interface InterpretResponse {
+  translation: Translation;
+  correctionSuggestions: CorrectionSuggestion;
+  deepCorrections: any[];
+}
+
 export interface Message {
   id: string;
   content: string;
   senderId: string;
   chatId: string;
-  translation?: Record<string, unknown> | null;
-  correctionSuggestions?: Record<string, unknown> | null;
+  translation?: Translation | null; 
+  correctionSuggestions?: CorrectionSuggestion | null;
   createdAt: Date | string;
   updatedAt: Date | string;
   clientRequestId?: string;
