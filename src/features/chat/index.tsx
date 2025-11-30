@@ -16,6 +16,7 @@ export default function ChatFeature({ chatId, recipientId: propRecipientId, clas
 
   const { data: messagesData, isLoading: isLoadingMessages } =
     useMessagesByChatId(activeChatId || "");
+  console.log('fetchhh: ', messagesData)
   const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatId) : undefined;
 
   const currentProfileId = session?.user?.profile?.id;

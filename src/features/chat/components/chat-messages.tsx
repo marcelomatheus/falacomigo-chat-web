@@ -57,6 +57,7 @@ export function ChatMessages({
       {messages.map((message) => (
         <MessageBubble
           key={message.id}
+          id={message.id}
           content={message.content}
           senderId={message.senderId}
           currentProfileId={currentProfileId}
