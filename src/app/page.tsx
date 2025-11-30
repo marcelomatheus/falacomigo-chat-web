@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import UsersFeature from "@/features/users";
 import ChatFeature from "@/features/chat";
 import ChatList from "@/features/chat/components/chat-list";
+import MyAccountFeature from "@/features/my-account"; // [IMPORT NOVO]
 import { MobileNavigation } from "@/components/mobile-navigation";
 import { useFindOrCreateChat } from "@/features/chat/hooks/useFindOrCreateChat";
 import { toast } from "react-toastify";
@@ -46,8 +47,8 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen flex flex-col bg-background">
+      {/* Layout Desktop */}
       <div className="hidden md:flex flex-1 overflow-hidden">
-  
        <div className="w-80 border-r border-border">
           <ChatList
             selectedChatId={selectedChatId}
@@ -58,13 +59,13 @@ export default function ChatPage() {
         <div className="flex-1">
           <ChatFeature chatId={selectedChatId} recipientId={selectedProfileId} className="h-full" />
         </div>
-        
          <div className="w-80 border-r border-border">
+          {/* Você pode querer mostrar o perfil aqui também ou manter a lista de usuários */}
           <UsersFeature onStartChat={handleStartChat} />
         </div>
       </div>
       
-
+      {/* Layout Mobile */}
       <div className="md:hidden flex-1 overflow-hidden pb-32">
         {mobileView === "users" && (
           <UsersFeature onStartChat={handleStartChat} />
@@ -80,16 +81,7 @@ export default function ChatPage() {
           )
         )}
         {mobileView === "profile" && (
-          <div className="flex items-center justify-center h-full p-8 text-center">
-            <div className="space-y-2">
-              <p className="text-muted-foreground">
-                Página de perfil em construção
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Acesse &ldquo;Minha Conta&rdquo; no menu para gerenciar seu perfil
-              </p>
-            </div>
-          </div>
+          <MyAccountFeature />
         )}
       </div>
 
