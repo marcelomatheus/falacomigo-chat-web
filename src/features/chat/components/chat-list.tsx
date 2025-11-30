@@ -49,11 +49,11 @@ const ChatList = ({
             const lastMessage = chat.lastMessage?.content || "Sem mensagens";
             const avatarFallback = otherParticipant?.name
                 ? otherParticipant.name
-                        .split(" ")
-                        .map((word) => word[0])
-                        .join("")
-                        .toUpperCase()
-                        .slice(0, 2)
+                    .split(" ")
+                    .map((word) => word[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 2)
                 : "C";
 
             return (
@@ -95,7 +95,7 @@ const ChatList = ({
             <div
                 className={cn(
                     "overflow-y-auto",
-                    isMobileVariant ? "max-h-72 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
+                    isMobileVariant ? "flex-1 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
                 )}
             >
                 {renderContent()}

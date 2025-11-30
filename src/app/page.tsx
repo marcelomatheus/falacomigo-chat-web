@@ -66,7 +66,7 @@ export default function ChatPage() {
       </div>
 
       {/* Layout Mobile */}
-      <div className="md:hidden flex-1 overflow-hidden">
+      <div className="md:hidden flex-1 overflow-hidden pb-16">
         {mobileView === "users" && (
           <UsersFeature onStartChat={handleStartChat} />
         )}
