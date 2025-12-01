@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChatContainer } from "./components/chat-container";
 import { useChats } from "./hooks/useChat";
 import { useMessagesByChatId } from "./hooks/useMessage";
@@ -16,7 +16,13 @@ export default function ChatFeature({ chatId, recipientId: propRecipientId, clas
 
   const { data: messagesData, isLoading: isLoadingMessages } =
     useMessagesByChatId(activeChatId || "");
-  console.log('fetchhh: ', messagesData)
+
+  const messagesList = useMemo(() => {
+    if (!messagesData) return [];
+
+    return Array.isArray(messagesData) ? messagesData : messagesData.data || [];
+  }, [messagesData]);
+
   const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatId) : undefined;
 
   const currentProfileId = session?.user?.profile?.id;

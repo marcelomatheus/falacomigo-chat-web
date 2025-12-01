@@ -23,16 +23,12 @@ export const useMessage = (id: string) => {
   });
 };
 
-export const useMessagesByChatId = (chatId: string) => {
-  const queryClient = useQueryClient();
-  const key = CHAT_QUERY_KEYS.messagesByChatId(chatId, {});
-  const isLoading = queryClient.isFetching({ queryKey: key }) > 0;
-  const data = queryClient.getQueryData<{
-    data: MessageWithSender[];
-    total: number;
-  }>(key);
-
-  return { data, isLoading };
+export const useMessagesByChatId = (chatId: string, params?: Omit<FilterMessageParams, "chatId">) => {
+  return useQuery({
+    queryKey: CHAT_QUERY_KEYS.messagesByChatId(chatId, params),
+    queryFn: () => messageApi.getMessagesByChatId(chatId, params),
+    enabled: !!chatId,
+  });
 };
 
 export const useSendMessage = () => {

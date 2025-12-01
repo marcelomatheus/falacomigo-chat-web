@@ -35,6 +35,7 @@ export function MessageBubble({
   const { mutateAsync: interpret, isPending: isAnalyzing } = useInterpretMessage();
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   const [fetchedData, setFetchedData] = useState<InterpretResponse | null>(null);
+
   const translationData = (fetchedData?.translation || initialTranslation) as Translation | null;
   const correctionData = (fetchedData?.correctionSuggestions || initialCorrection) as CorrectionSuggestion | null;
 
