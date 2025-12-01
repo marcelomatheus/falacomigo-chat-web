@@ -77,6 +77,7 @@ export function ChatMessages({
               ? () => onRequestCorrection(message.id)
               : undefined
           }
+          chatId={message.chatId}
         />
       ))}
       <div ref={messagesEndRef} />

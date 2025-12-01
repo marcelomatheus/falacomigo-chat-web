@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChatMessageBubbleProps } from "../interface/component-props.interface";
-import { Sparkles, X, Loader2, ArrowRight } from "lucide-react"; 
+import { Sparkles, X, Loader2, ArrowRight } from "lucide-react";
 import { useInterpretMessage } from "../hooks/useMessage";
 import { InterpretResponse, Translation, CorrectionSuggestion } from "../interface/message.interface";
 
@@ -24,7 +24,7 @@ export function MessageBubble({
   onRequestTranslation,
   onRequestCorrection,
   className,
-  ...props 
+  ...props
 }: ChatMessageBubbleProps & { id?: string; chatId?: string }) {
   const isOwnMessage = senderId === currentProfileId;
   const timeString = new Date(timestamp).toLocaleTimeString("pt-BR", {
@@ -35,17 +35,19 @@ export function MessageBubble({
   const { mutateAsync: interpret, isPending: isAnalyzing } = useInterpretMessage();
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   const [fetchedData, setFetchedData] = useState<InterpretResponse | null>(null);
-
   const translationData = (fetchedData?.translation || initialTranslation) as Translation | null;
   const correctionData = (fetchedData?.correctionSuggestions || initialCorrection) as CorrectionSuggestion | null;
-  
+
   const messageId = props.id || (props as any).messageId;
   const chatId = props.chatId;
 
   const handleAnalysisClick = async () => {
     setShowAnalysisModal(true);
 
-    if ((initialTranslation || initialCorrection) || fetchedData) {
+    const hasValidTranslation = initialTranslation && initialTranslation.translatedText;
+    const hasValidCorrection = initialCorrection && initialCorrection.suggestionText;
+
+    if ((hasValidTranslation || hasValidCorrection) || fetchedData) {
       return;
     }
 
@@ -55,7 +57,6 @@ export function MessageBubble({
           content,
           senderId,
           messageId,
-          chatId
         });
         setFetchedData(result);
       } catch (error) {
@@ -107,13 +108,6 @@ export function MessageBubble({
           )}
 
           <div className="flex items-end gap-2">
-            {/* MUDANÇA AQUI:
-              O container da mensagem agora vem PRIMEIRO no código.
-              Como o flex é padrão (row), o que vem primeiro fica na esquerda.
-              
-              Ordem visual resultante: [Mensagem] [Botão]
-            */}
-
             <div
               className={cn(
                 "rounded-2xl px-4 py-2 shadow-sm relative",
@@ -172,15 +166,15 @@ export function MessageBubble({
       {showAnalysisModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
           <Card className="w-full max-w-md bg-card shadow-xl border-border relative">
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="absolute right-2 top-2 h-8 w-8 z-10"
               onClick={() => setShowAnalysisModal(false)}
             >
               <X className="h-4 w-4" />
             </Button>
-            
+
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Sparkles className="h-5 w-5 text-primary" />
@@ -208,7 +202,7 @@ export function MessageBubble({
                   {translationData ? (
                     <div className="space-y-2">
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                        Tradução 
+                        Tradução
                         {translationData.targetLanguage && <Badge variant="secondary" className="text-[10px] h-4 px-1">{translationData.targetLanguage}</Badge>}
                       </span>
                       <div className="p-3 rounded-lg bg-primary/5 border border-primary/10 text-sm">
@@ -220,12 +214,12 @@ export function MessageBubble({
                   )}
 
                   {correctionData ? (
-                     <div className="space-y-2">
+                    <div className="space-y-2">
                       <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sugestão de Correção</span>
                       <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-sm space-y-2">
                         <div className="flex items-start gap-2">
-                           <ArrowRight className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
-                           <p className="font-medium text-green-900 dark:text-green-100">{correctionData.suggestionText}</p>
+                          <ArrowRight className="h-4 w-4 text-green-600 mt-0.5 shrink-0" />
+                          <p className="font-medium text-green-900 dark:text-green-100">{correctionData.suggestionText}</p>
                         </div>
                         {correctionData.reason && (
                           <p className="text-xs text-muted-foreground pl-6 border-l-2 border-green-500/30 ml-1">
