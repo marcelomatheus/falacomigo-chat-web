@@ -82,19 +82,7 @@ const ChatList = ({
                 className,
             )}
         >
-            {!hideHeader && (
-                <div
-                    className={cn(
-                        "border-b border-border",
-                        isMobileVariant ? "px-4 py-4" : "p-4",
-                    )}
-                >
-                    <h2 className="text-lg font-semibold">Suas Conversas</h2>
-                    <p className="text-xs text-muted-foreground">
-                        Escolha para continuar o bate-papo
-                    </p>
-                </div>
-            )}
+
             <div
                 className={cn(
                     "overflow-y-auto",
