@@ -5,11 +5,16 @@ import { useChats } from "../hooks/useChat";
 import { useSession } from "next-auth/react";
 import { ChatWithParticipants } from "../interface/chat.interface";
 import { ChatListItem } from "@/components/styleguide/chat-list-item";
-import { Loader2 } from "lucide-react";
+import { Loader2, BookOpen } from "lucide-react";
 import Image from "next/image";
 import { ChatListProps } from "../interface/component-props.interface";
+import { Button } from "@/components/ui/button";
 
 import logo from "../../../../public/logo.png"
+
+interface ExtendedChatListProps extends ChatListProps {
+    onOpenLearning?: () => void;
+}
 
 const ChatList = ({
     selectedChatId,
@@ -17,7 +22,8 @@ const ChatList = ({
     className,
     variant = "desktop",
     hideHeader = false,
-}: ChatListProps) => {
+    onOpenLearning, 
+}: ExtendedChatListProps) => {
     const { data: chats, isLoading } = useChats();
     const { data: session } = useSession();
     const currentProfileId = session?.user?.profile?.id;
@@ -89,25 +95,41 @@ const ChatList = ({
                     isMobileVariant ? "flex-1 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
                 )}
             >
-                <div className="flex flex-col items-center justify-center mb-4">
-                    <Image
-                        src={logo}
-                        alt="Fala Comigo Logo"
-                        width={80}
-                        height={80}
-                        className="object-contain"
-                        priority
-                    />
+                {!hideHeader && (
+                    <div className="flex flex-col items-center justify-center mb-4">
+                        <Image
+                            src={logo}
+                            alt="Fala Comigo Logo"
+                            width={80}
+                            height={80}
+                            className="object-contain"
+                            priority
+                        />
 
-                    <h1 className="text-lg color-primary font-bold text-foreground tracking-tight">
-                        Fala Comigo
-                    </h1>
+                        <h1 className="text-lg color-primary font-bold text-foreground tracking-tight">
+                            Fala Comigo
+                        </h1>
 
-                    <div className="w-full border-b border-border/80 mt-3" />
-                </div>
+                        <div className="w-full border-b border-border/80 mt-3" />
+                    </div>
+                )}
+                
                 {renderContent()}
 
             </div>
+
+            {!isMobileVariant && onOpenLearning && (
+                <div className="p-4 border-t border-border mt-auto">
+                    <Button 
+                        onClick={onOpenLearning} 
+                        variant="outline" 
+                        className="w-full justify-start gap-2 h-12 shadow-sm"
+                    >
+                        <BookOpen className="h-5 w-5 text-primary" />
+                        <span>Meus Aprendizados</span>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
