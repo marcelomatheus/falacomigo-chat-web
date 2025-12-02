@@ -24,7 +24,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Search, Loader2, Trash2, ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
+import {
+  ArrowLeft,
+  Search,
+  Loader2,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  BookOpen,
+} from "lucide-react";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 
@@ -37,26 +45,22 @@ export default function LearningFeature({ onBack, className }: LearningFeaturePr
   const { data: session } = useSession();
   const profileId = session?.user?.profile?.id;
 
-  // Estados de Filtro e Paginação
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [page, setPage] = useState(1);
   const LIMIT = 10;
 
-  // Estados de Modal
   const [selectedItem, setSelectedItem] = useState<LearningItem | null>(null);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
-  // Debounce da busca
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
-      setPage(1); // Reseta para pág 1 ao buscar
+      setPage(1);
     }, 500);
     return () => clearTimeout(timer);
   }, [search]);
 
-  // Query
   const { data: learningData, isLoading, isPlaceholderData } = useLearnings({
     profileId: profileId || "",
     title: debouncedSearch || undefined,
@@ -66,7 +70,6 @@ export default function LearningFeature({ onBack, className }: LearningFeaturePr
     orderDirection: "desc",
   });
 
-  // Mutation
   const { mutateAsync: deleteItem, isPending: isDeleting } = useDeleteLearning();
 
   const handleDelete = async () => {
@@ -75,9 +78,8 @@ export default function LearningFeature({ onBack, className }: LearningFeaturePr
       await deleteItem(itemToDelete);
       toast.success("Aprendizado removido com sucesso");
       setItemToDelete(null);
-      // Se era o item aberto no modal, fecha o modal também
       if (selectedItem?.id === itemToDelete) setSelectedItem(null);
-    } catch (error) {
+    } catch {
       toast.error("Erro ao remover item");
     }
   };
@@ -124,24 +126,23 @@ export default function LearningFeature({ onBack, className }: LearningFeaturePr
               className="cursor-pointer hover:bg-muted/50 transition-colors group relative"
               onClick={() => setSelectedItem(item)}
             >
-              <CardContent className="p-4 flex justify-between items-center">
-                <div>
-                  <h3 className="font-medium text-foreground">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {new Date(item.createdAt).toLocaleDateString("pt-BR")}
-                  </p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setItemToDelete(item.id);
-                  }}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setItemToDelete(item.id);
+                }}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+
+              <CardContent className="p-4">
+                <h3 className="font-medium text-foreground">{item.title}</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {new Date(item.createdAt).toLocaleDateString("pt-BR")}
+                </p>
               </CardContent>
             </Card>
           ))
@@ -183,10 +184,12 @@ export default function LearningFeature({ onBack, className }: LearningFeaturePr
           <DialogHeader>
             <DialogTitle className="text-xl text-primary">{selectedItem?.title}</DialogTitle>
             <DialogDescription>
-              Criado em {selectedItem && new Date(selectedItem.createdAt).toLocaleDateString("pt-BR")}
+              Criado em{" "}
+              {selectedItem &&
+                new Date(selectedItem.createdAt).toLocaleDateString("pt-BR")}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 mt-2">
             <div className="space-y-2">
               <h4 className="text-sm font-semibold text-foreground">Explicação</h4>
@@ -210,7 +213,7 @@ export default function LearningFeature({ onBack, className }: LearningFeaturePr
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir aprendizado?</AlertDialogTitle>
             <AlertDialogDescription>
-              Essa ação não pode ser desfeita. Isso excluirá permanentemente este registro de seus estudos.
+              Essa ação não pode ser desfeita. Isso excluirá permanentemente este registro.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
