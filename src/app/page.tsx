@@ -105,7 +105,6 @@ export default function ChatPage() {
           ) : (
             <ChatList
               variant="mobile"
-              hideHeader
               selectedChatId={selectedChatId}
               onSelectChat={handleSelectChat}
               className="h-full"
