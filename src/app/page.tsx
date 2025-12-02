@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import UsersFeature from "@/features/users";
 import ChatFeature from "@/features/chat";
 import ChatList from "@/features/chat/components/chat-list";
+import MyAccountFeature from "@/features/my-account"; // [IMPORT NOVO]
 import { MobileNavigation } from "@/components/mobile-navigation";
 import { useFindOrCreateChat } from "@/features/chat/hooks/useFindOrCreateChat";
 import { toast } from "react-toastify";
@@ -46,9 +47,9 @@ export default function ChatPage() {
 
   return (
     <div className="h-screen flex flex-col bg-background">
+      {/* Layout Desktop */}
       <div className="hidden md:flex flex-1 overflow-hidden">
-  
-       <div className="w-80 border-r border-border">
+        <div className="w-80 border-r border-border">
           <ChatList
             selectedChatId={selectedChatId}
             onSelectChat={handleSelectChat}
@@ -58,52 +59,46 @@ export default function ChatPage() {
         <div className="flex-1">
           <ChatFeature chatId={selectedChatId} recipientId={selectedProfileId} className="h-full" />
         </div>
-        
-         <div className="w-80 border-r border-border">
+        <div className="w-80 border-r border-border">
+          {/* Você pode querer mostrar o perfil aqui também ou manter a lista de usuários */}
           <UsersFeature onStartChat={handleStartChat} />
         </div>
       </div>
-      
 
-      <div className="md:hidden flex-1 overflow-hidden pb-32">
+      {/* Layout Mobile */}
+      <div className="md:hidden flex-1 overflow-hidden pb-16">
         {mobileView === "users" && (
           <UsersFeature onStartChat={handleStartChat} />
         )}
         {mobileView === "chat" && (
           selectedChatId ? (
-            <ChatFeature chatId={selectedChatId} recipientId={selectedProfileId} className="h-full" />
+            <ChatFeature
+              chatId={selectedChatId}
+              recipientId={selectedProfileId}
+              className="h-full"
+              onBack={() => {
+                setSelectedChatId(undefined);
+                setSelectedProfileId(undefined);
+              }}
+            />
           ) : (
-            <div className="flex h-full flex-col items-center justify-center gap-2 p-8 text-center text-muted-foreground">
-              <p>Selecione uma conversa na aba &ldquo;Conversas&rdquo;.</p>
-              <p className="text-sm">Assim que escolher, exibiremos o histórico aqui.</p>
-            </div>
+            <ChatList
+              variant="mobile"
+              hideHeader
+              selectedChatId={selectedChatId}
+              onSelectChat={handleSelectChat}
+              className="h-full"
+            />
           )
         )}
         {mobileView === "profile" && (
-          <div className="flex items-center justify-center h-full p-8 text-center">
-            <div className="space-y-2">
-              <p className="text-muted-foreground">
-                Página de perfil em construção
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Acesse &ldquo;Minha Conta&rdquo; no menu para gerenciar seu perfil
-              </p>
-            </div>
-          </div>
+          <MyAccountFeature />
         )}
       </div>
 
       <MobileNavigation
         currentView={mobileView}
         onViewChange={setMobileView}
-        chatListSlot={
-          <ChatList
-            variant="mobile"
-            hideHeader
-            selectedChatId={selectedChatId}
-            onSelectChat={handleSelectChat}
-          />
-        }
       />
 
       {isStartingChat && startingProfile && (

@@ -6,7 +6,10 @@ import { useSession } from "next-auth/react";
 import { ChatWithParticipants } from "../interface/chat.interface";
 import { ChatListItem } from "@/components/styleguide/chat-list-item";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 import { ChatListProps } from "../interface/component-props.interface";
+
+import logo from "../../../../public/logo.png"
 
 const ChatList = ({
     selectedChatId,
@@ -49,11 +52,11 @@ const ChatList = ({
             const lastMessage = chat.lastMessage?.content || "Sem mensagens";
             const avatarFallback = otherParticipant?.name
                 ? otherParticipant.name
-                        .split(" ")
-                        .map((word) => word[0])
-                        .join("")
-                        .toUpperCase()
-                        .slice(0, 2)
+                    .split(" ")
+                    .map((word) => word[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 2)
                 : "C";
 
             return (
@@ -79,26 +82,31 @@ const ChatList = ({
                 className,
             )}
         >
-            {!hideHeader && (
-                <div
-                    className={cn(
-                        "border-b border-border",
-                        isMobileVariant ? "px-4 py-2" : "p-4",
-                    )}
-                >
-                    <h2 className="text-lg font-semibold">Suas Conversas</h2>
-                    <p className="text-xs text-muted-foreground">
-                        Escolha para continuar o bate-papo
-                    </p>
-                </div>
-            )}
+
             <div
                 className={cn(
                     "overflow-y-auto",
-                    isMobileVariant ? "max-h-72 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
+                    isMobileVariant ? "flex-1 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
                 )}
             >
+                <div className="flex flex-col items-center justify-center mb-4">
+                    <Image
+                        src={logo}
+                        alt="Fala Comigo Logo"
+                        width={80}
+                        height={80}
+                        className="object-contain"
+                        priority
+                    />
+
+                    <h1 className="text-lg color-primary font-bold text-foreground tracking-tight">
+                        Fala Comigo
+                    </h1>
+
+                    <div className="w-full border-b border-border/80 mt-3" />
+                </div>
                 {renderContent()}
+
             </div>
         </div>
     );
