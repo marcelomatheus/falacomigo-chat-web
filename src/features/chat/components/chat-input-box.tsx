@@ -80,7 +80,7 @@ export function ChatInputBox({
           onKeyDown={handleKeyPress}
           placeholder={placeholder}
           disabled={isDisabled}
-          className="flex-1 min-h-[40px] max-h-[120px] resize-none border-0 bg-transparent p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
+          className="flex-1 min-h-[40px] max-h-[120px] resize-none border-0 bg-transparent dark:bg-transparent p-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
           rows={1}
         />
         {onAttachment && (

@@ -1,4 +1,5 @@
-const MyAccount = () => {
-  return <div> My Account Page </div>;
+import MyAccountFeature from "@/features/my-account";
+
+export default function MyAccountPage() {
+  return <MyAccountFeature />;
 }
-export default MyAccount;

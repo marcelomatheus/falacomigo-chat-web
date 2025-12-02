@@ -129,9 +129,10 @@ export function SocketProvider({ children }: SocketProviderProps) {
       if (!resolvedChatId) return;
 
       let updatedMessage: MessageWithSender | undefined;
+      // CORREÇÃO AQUI: Mudado de {} para undefined
       queryClientRef.current.setQueryData<
         { data: MessageWithSender[]; total: number } | undefined
-      >(CHAT_QUERY_KEYS.messagesByChatId(resolvedChatId, {}), (oldData) => {
+      >(CHAT_QUERY_KEYS.messagesByChatId(resolvedChatId, undefined), (oldData) => {
         if (!oldData?.data) return oldData;
 
         const nextMessages = oldData.data.map((message) => {
@@ -164,9 +165,10 @@ export function SocketProvider({ children }: SocketProviderProps) {
       if (!resolvedChatId) return;
 
       let removed = false;
+      // CORREÇÃO AQUI: Mudado de {} para undefined
       queryClientRef.current.setQueryData<
         { data: MessageWithSender[]; total: number } | undefined
-      >(CHAT_QUERY_KEYS.messagesByChatId(resolvedChatId, {}), (oldData) => {
+      >(CHAT_QUERY_KEYS.messagesByChatId(resolvedChatId, undefined), (oldData) => {
         if (!oldData?.data) return oldData;
 
         const filteredMessages = oldData.data.filter((message) => {
@@ -210,9 +212,10 @@ export function SocketProvider({ children }: SocketProviderProps) {
     (chatId: string, incomingMessages: MessageWithSender[]) => {
       if (!chatId || incomingMessages.length === 0) return;
 
+      // CORREÇÃO AQUI: Mudado de {} para undefined
       queryClientRef.current.setQueryData<
         { data: MessageWithSender[]; total: number } | undefined
-      >(CHAT_QUERY_KEYS.messagesByChatId(chatId, {}), (oldData) => {
+      >(CHAT_QUERY_KEYS.messagesByChatId(chatId, undefined), (oldData) => {
         const currentMessages = [...(oldData?.data ?? [])];
 
         incomingMessages.forEach((incoming) => {

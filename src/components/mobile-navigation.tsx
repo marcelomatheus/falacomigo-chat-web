@@ -1,21 +1,18 @@
 "use client";
 
-import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { Users, MessageCircle, User as UserIcon } from "lucide-react";
+import { Users, MessageCircle, User as UserIcon, BookOpen } from "lucide-react"; // Import BookOpen
 
 interface MobileNavigationProps {
-  currentView: "users" | "chat" | "profile";
-  onViewChange: (view: "users" | "chat" | "profile") => void;
+  currentView: "users" | "chat" | "profile" | "learning"; // Adicione learning
+  onViewChange: (view: "users" | "chat" | "profile" | "learning") => void; // Adicione learning
   className?: string;
-  chatListSlot?: ReactNode;
 }
 
 export function MobileNavigation({
   currentView,
   onViewChange,
   className,
-  chatListSlot,
 }: MobileNavigationProps) {
   const navItems = [
     {
@@ -27,6 +24,11 @@ export function MobileNavigation({
       id: "chat" as const,
       icon: MessageCircle,
       label: "Conversas",
+    },
+    {
+      id: "learning" as const,
+      icon: BookOpen,
+      label: "Estudos",
     },
     {
       id: "profile" as const,
@@ -42,11 +44,6 @@ export function MobileNavigation({
         className
       )}
     >
-      {chatListSlot && currentView === "chat" && (
-        <div className="border-b border-border max-h-72 overflow-y-auto">
-          {chatListSlot}
-        </div>
-      )}
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
