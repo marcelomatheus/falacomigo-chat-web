@@ -14,7 +14,7 @@ export async function loginWithCredentials(credentials: {
         if (!res.ok) throw new Error(`Login request failed with status ${res.status}`);
 
         const data = await res.json();
-
+        console.log('data: ', data)
         if (data.access_token && data.user) {
             return {
                 id: data.user.id,

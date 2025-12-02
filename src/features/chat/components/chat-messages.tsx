@@ -21,6 +21,7 @@ export function ChatMessages({
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
+    console.log('message: ', messages)
   }, [messages]);
 
   if (isLoading && messages.length === 0) {
@@ -57,6 +58,7 @@ export function ChatMessages({
       {messages.map((message) => (
         <MessageBubble
           key={message.id}
+          id={message.id}
           content={message.content}
           senderId={message.senderId}
           currentProfileId={currentProfileId}
@@ -76,6 +78,7 @@ export function ChatMessages({
               ? () => onRequestCorrection(message.id)
               : undefined
           }
+          chatId={message.chatId}
         />
       ))}
       <div ref={messagesEndRef} />

@@ -9,7 +9,7 @@ import { CHAT_QUERY_KEYS } from "../constants";
 export const useChatSocket = (chatId: string) => {
   const { socket } = useSocket();
 
-  const queryKey = useMemo(() => CHAT_QUERY_KEYS.messagesByChatId(chatId, {}), [chatId]);
+  const queryKey = useMemo(() => CHAT_QUERY_KEYS.messagesByChatId(chatId, undefined), [chatId]);
 
   useEffect(() => {
     if (!socket) return;

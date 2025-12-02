@@ -5,6 +5,7 @@ import {
   SendMessageParams,
   FilterMessageParams,
   PaginatedMessages,
+  InterpretResponse, 
 } from "../interface/message.interface";
 
 export const messageApi = {
@@ -57,6 +58,15 @@ export const messageApi = {
 
   requestCorrection: async (messageId: string): Promise<Message> => {
     const response = await api.post(`/message/${messageId}/correct`);
+    return response.data;
+  },
+
+  interpret: async (data: {
+    content: string;
+    senderId: string;
+    messageId: string;
+  }): Promise<InterpretResponse> => {
+    const response = await api.post("/ai-tools/interpret", data);
     return response.data;
   },
 };

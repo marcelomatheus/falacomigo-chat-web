@@ -5,8 +5,16 @@ import { useChats } from "../hooks/useChat";
 import { useSession } from "next-auth/react";
 import { ChatWithParticipants } from "../interface/chat.interface";
 import { ChatListItem } from "@/components/styleguide/chat-list-item";
-import { Loader2 } from "lucide-react";
+import { Loader2, BookOpen } from "lucide-react";
+import Image from "next/image";
 import { ChatListProps } from "../interface/component-props.interface";
+import { Button } from "@/components/ui/button";
+
+import logo from "../../../../public/logo.png"
+
+interface ExtendedChatListProps extends ChatListProps {
+    onOpenLearning?: () => void;
+}
 
 const ChatList = ({
     selectedChatId,
@@ -14,7 +22,8 @@ const ChatList = ({
     className,
     variant = "desktop",
     hideHeader = false,
-}: ChatListProps) => {
+    onOpenLearning, 
+}: ExtendedChatListProps) => {
     const { data: chats, isLoading } = useChats();
     const { data: session } = useSession();
     const currentProfileId = session?.user?.profile?.id;
@@ -49,11 +58,11 @@ const ChatList = ({
             const lastMessage = chat.lastMessage?.content || "Sem mensagens";
             const avatarFallback = otherParticipant?.name
                 ? otherParticipant.name
-                        .split(" ")
-                        .map((word) => word[0])
-                        .join("")
-                        .toUpperCase()
-                        .slice(0, 2)
+                    .split(" ")
+                    .map((word) => word[0])
+                    .join("")
+                    .toUpperCase()
+                    .slice(0, 2)
                 : "C";
 
             return (
@@ -79,27 +88,48 @@ const ChatList = ({
                 className,
             )}
         >
-            {!hideHeader && (
-                <div
-                    className={cn(
-                        "border-b border-border",
-                        isMobileVariant ? "px-4 py-2" : "p-4",
-                    )}
-                >
-                    <h2 className="text-lg font-semibold">Suas Conversas</h2>
-                    <p className="text-xs text-muted-foreground">
-                        Escolha para continuar o bate-papo
-                    </p>
-                </div>
-            )}
+
             <div
                 className={cn(
                     "overflow-y-auto",
-                    isMobileVariant ? "max-h-72 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
+                    isMobileVariant ? "flex-1 px-3 py-2 space-y-1" : "flex-1 p-4 space-y-2",
                 )}
             >
+                {!hideHeader && (
+                    <div className="flex flex-col items-center justify-center mb-4">
+                        <Image
+                            src={logo}
+                            alt="Fala Comigo Logo"
+                            width={80}
+                            height={80}
+                            className="object-contain"
+                            priority
+                        />
+
+                        <h1 className="text-lg color-primary font-bold text-foreground tracking-tight">
+                            Fala Comigo
+                        </h1>
+
+                        <div className="w-full border-b border-border/80 mt-3" />
+                    </div>
+                )}
+                
                 {renderContent()}
+
             </div>
+
+            {!isMobileVariant && onOpenLearning && (
+                <div className="p-4 border-t border-border mt-auto">
+                    <Button 
+                        onClick={onOpenLearning} 
+                        variant="outline" 
+                        className="w-full justify-start gap-2 h-12 shadow-sm"
+                    >
+                        <BookOpen className="h-5 w-5 text-primary" />
+                        <span>Meus Aprendizados</span>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };

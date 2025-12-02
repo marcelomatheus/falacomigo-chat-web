@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChatContainer } from "./components/chat-container";
 import { useChats } from "./hooks/useChat";
 import { useMessagesByChatId } from "./hooks/useMessage";
@@ -9,13 +9,20 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { ChatFeatureProps } from "./interface/component-props.interface";
 
-export default function ChatFeature({ chatId, recipientId: propRecipientId, className }: ChatFeatureProps) {
+export default function ChatFeature({ chatId, recipientId: propRecipientId, className, onBack }: ChatFeatureProps) {
   const { data: session } = useSession();
   const [activeChatId, setActiveChatId] = useState(chatId);
   const { data: chats, isLoading: isLoadingChats } = useChats();
 
   const { data: messagesData, isLoading: isLoadingMessages } =
     useMessagesByChatId(activeChatId || "");
+
+  const messagesList = useMemo(() => {
+    if (!messagesData) return [];
+
+    return Array.isArray(messagesData) ? messagesData : messagesData.data || [];
+  }, [messagesData]);
+
   const activeChat = Array.isArray(chats) ? chats.find((c) => c.id === activeChatId) : undefined;
 
   const currentProfileId = session?.user?.profile?.id;
@@ -72,6 +79,7 @@ export default function ChatFeature({ chatId, recipientId: propRecipientId, clas
         messages={messagesData?.data || []}
         currentProfileId={currentProfileId || ""}
         isLoading={isLoadingMessages}
+        onBack={onBack}
       />
     </div>
   );
