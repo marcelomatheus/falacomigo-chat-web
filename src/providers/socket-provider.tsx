@@ -368,7 +368,7 @@ export function SocketProvider({ children }: SocketProviderProps) {
         
         if (!isMounted) return;
 
-        const socketUrl = "http://localhost:8080";
+        const socketUrl = process.env.NEXT_PUBLIC_API_URL;
         
         socketInstance = io(socketUrl, {
           auth: { token: session.accessToken },
