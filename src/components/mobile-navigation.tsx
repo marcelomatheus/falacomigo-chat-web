@@ -15,15 +15,16 @@ export function MobileNavigation({
   className,
 }: MobileNavigationProps) {
   const navItems = [
-    {
-      id: "users" as const,
-      icon: Users,
-      label: "Usuários",
-    },
+    
     {
       id: "chat" as const,
       icon: MessageCircle,
       label: "Conversas",
+    },
+    {
+      id: "users" as const,
+      icon: Users,
+      label: "Usuários",
     },
     {
       id: "learning" as const,
