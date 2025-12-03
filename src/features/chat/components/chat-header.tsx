@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, MoreVertical, Phone, Video } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ChatHeaderProps } from "../interface/component-props.interface";
+import { getInitials } from "@/lib/utils/string.utils";
 
 export default function ChatHeader({
   participantName,
@@ -16,15 +17,6 @@ export default function ChatHeader({
   onMoreOptions,
   className,
 }: ChatHeaderProps) {
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   return (
     <header
       className={cn(

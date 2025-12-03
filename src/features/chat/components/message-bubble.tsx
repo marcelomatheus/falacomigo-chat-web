@@ -10,6 +10,7 @@ import { ChatMessageBubbleProps } from "../interface/component-props.interface";
 import { Sparkles, X, Loader2, ArrowRight } from "lucide-react";
 import { useInterpretMessage } from "../hooks/useMessage";
 import { InterpretResponse, Translation, CorrectionSuggestion } from "../interface/message.interface";
+import { getInitials as getInitialsUtil } from "@/lib/utils/string.utils";
 
 export function MessageBubble({
   content,
@@ -68,12 +69,7 @@ export function MessageBubble({
 
   const getInitials = (name?: string) => {
     if (!name) return "U";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    return getInitialsUtil(name);
   };
 
   return (

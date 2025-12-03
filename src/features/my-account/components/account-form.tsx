@@ -8,12 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-// Adicionei Moon e Sun aos imports
-import { Loader2, Save, Coins, Globe, Award, Moon, Sun } from "lucide-react";
+import { Loader2, Save, Coins, Globe, Award, Moon, Sun, LogOut } from "lucide-react";
 import { LANGUAGE_OPTIONS, LEVEL_OPTIONS } from "@/features/users/constants";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import router from "next/router";
+import { getInitials } from "@/lib/utils/string.utils";
 
 export function AccountForm() {
     const { data: profile, isLoading } = useMyProfile();
@@ -24,7 +25,6 @@ export function AccountForm() {
     const [learningLevel, setLearningLevel] = useState<string>("");
     const [knownLanguages, setKnownLanguages] = useState<string[]>([]);
     
-    // Estado para controlar o tema
     const [isDarkMode, setIsDarkMode] = useState(false);
 
     const { data: session } = useSession();
@@ -36,21 +36,31 @@ export function AccountForm() {
             setLearningLevel(profile.learningLevel || "");
             setKnownLanguages(profile.knownLanguages || []);
         }
-
-        // Verifica o tema atual ao carregar
-        const isDark = document.documentElement.classList.contains("dark");
-        setIsDarkMode(isDark);
     }, [profile]);
 
-    // Função para alternar o tema
+    useEffect(() => {
+        const savedTheme = localStorage.getItem("theme");
+        const isDark = savedTheme === "dark" || (!savedTheme && document.documentElement.classList.contains("dark"));
+        
+        if (isDark) {
+            document.documentElement.classList.add("dark");
+            setIsDarkMode(true);
+        } else {
+            document.documentElement.classList.remove("dark");
+            setIsDarkMode(false);
+        }
+    }, []);
+
     const toggleTheme = () => {
         const html = document.documentElement;
         if (html.classList.contains("dark")) {
             html.classList.remove("dark");
             setIsDarkMode(false);
+            localStorage.setItem("theme", "light");
         } else {
             html.classList.add("dark");
             setIsDarkMode(true);
+            localStorage.setItem("theme", "dark");
         }
     };
 
@@ -84,7 +94,7 @@ export function AccountForm() {
     const handleSignOut = async () => {
     await signOut({ redirect: false });
     router.push('/login');
-    };
+  };
 
     if (isLoading) {
         return (
@@ -214,7 +224,6 @@ export function AccountForm() {
                     </CardContent>
                 </Card>
 
-                {/* Novo Card de Aparência */}
                 <Card>
                     <CardHeader className="pb-3">
                         <CardTitle className="text-lg">Aparência</CardTitle>
@@ -264,7 +273,7 @@ export function AccountForm() {
         onClick={handleSignOut}
       >
         <LogOut className="h-4 w-4" /> Sair
-            </Button>
+      </Button>
         </div>
     );
 }
