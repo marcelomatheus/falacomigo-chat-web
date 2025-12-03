@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ProfileWithUser } from "../interface/profile.interface";
 import { MessageCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getInitials } from "@/lib/utils/string.utils";
 
 interface UserListItemProps {
   profile: ProfileWithUser;
@@ -20,14 +21,6 @@ export function UserListItem({
   onStartChat,
   className,
 }: UserListItemProps) {
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
   return (
     <div
       className={cn(

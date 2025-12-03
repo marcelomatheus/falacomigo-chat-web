@@ -2,19 +2,18 @@
 
 import { cn } from "@/lib/utils";
 import { useChats } from "../hooks/useChat";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { ChatWithParticipants } from "../interface/chat.interface";
 import { ChatListItem } from "@/components/styleguide/chat-list-item";
-import { Loader2, BookOpen } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 import Image from "next/image";
-import { ChatListProps } from "../interface/component-props.interface";
-import { Button } from "@/components/ui/button";
+import { ExtendedChatListProps } from "../interface/component-props.interface";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils/string.utils";
 
 import logo from "../../../../public/logo.png"
-
-interface ExtendedChatListProps extends ChatListProps {
-    onOpenLearning?: () => void;
-}
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const ChatList = ({
     selectedChatId,
@@ -22,11 +21,17 @@ const ChatList = ({
     className,
     variant = "desktop",
     hideHeader = false,
-    onOpenLearning, 
+    onOpenProfile, 
 }: ExtendedChatListProps) => {
     const { data: chats, isLoading } = useChats();
     const { data: session } = useSession();
     const currentProfileId = session?.user?.profile?.id;
+    const router = useRouter();
+    const profile = session?.user?.profile;
+    const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push('/login');
+  };
     const isMobileVariant = variant === "mobile";
 
     const userChats = (chats as ChatWithParticipants[] | undefined)?.filter((chat) =>
@@ -88,7 +93,6 @@ const ChatList = ({
                 className,
             )}
         >
-
             <div
                 className={cn(
                     "overflow-y-auto",
@@ -115,21 +119,43 @@ const ChatList = ({
                 )}
                 
                 {renderContent()}
-
             </div>
 
-            {!isMobileVariant && onOpenLearning && (
-                <div className="p-4 border-t border-border mt-auto">
-                    <Button 
-                        onClick={onOpenLearning} 
-                        variant="outline" 
-                        className="w-full justify-start gap-2 h-12 shadow-sm"
-                    >
-                        <BookOpen className="h-5 w-5 text-primary" />
-                        <span>Meus Aprendizados</span>
-                    </Button>
-                </div>
+            {!isMobileVariant && onOpenProfile && profile && (
+                <div className="flex items-center justify-between p-3 border-t border-border bg-card">
+                <button
+                    onClick={onOpenProfile}
+                    className="flex items-center gap-3 p-2 rounded hover:bg-secondary  transition-colors"
+                >
+                    <Avatar className="h-10 w-10">
+                        {profile.photoUrl ? (
+                            <AvatarImage src={profile.photoUrl} alt={profile.name} />
+                        ) : null}
+                        <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                            {profile.name ? getInitials(profile.name) : "U"}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0 text-left">
+                        <p className="font-semibold text-sm text-foreground truncate">
+                            {profile.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                            {session?.user?.email || ""}
+                        </p>
+                    </div>
+                    
+                </button>
+                 <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleSignOut}
+        className="gap-2 text-muted-foreground hover:text-foreground"
+      >
+        <LogOut className="h-4 w-4" />
+      </Button>
+      </div>
             )}
+           
         </div>
     );
 };

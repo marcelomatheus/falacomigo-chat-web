@@ -69,7 +69,7 @@ export default function UsersFeature({
   return (
     <div className={cn("flex flex-col h-full bg-background", className)}>
       {showProfile ? (
-        <div className="md:hidden h-full">
+        <div className="h-full">
           <UserProfile
             profile={selectedProfile}
             onStartChat={() => handleStartChat(selectedProfile)}

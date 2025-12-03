@@ -7,8 +7,9 @@ import UsersFeature from "@/features/users";
 import ChatFeature from "@/features/chat";
 import ChatList from "@/features/chat/components/chat-list";
 import MyAccountFeature from "@/features/my-account";
-import LearningFeature from "@/features/learning"; // Importe a nova feature
+import LearningFeature from "@/features/learning";
 import { MobileNavigation } from "@/components/mobile-navigation";
+import { DesktopSidebar } from "@/components/desktop-sidebar";
 import { useFindOrCreateChat } from "@/features/chat/hooks/useFindOrCreateChat";
 import { toast } from "react-toastify";
 import { CHAT_QUERY_KEYS } from "@/features/chat/constants";
@@ -16,6 +17,7 @@ import { ProfileWithUser } from "@/features/users/interface/profile.interface";
 
 export default function ChatPage() {
   const [mobileView, setMobileView] = useState<"users" | "chat" | "profile" | "learning">("users");
+  const [desktopView, setDesktopView] = useState<"users" | "profile" | "learning">("users");
   const [selectedChatId, setSelectedChatId] = useState<string | undefined>();
   const [selectedProfileId, setSelectedProfileId] = useState<string | undefined>();
   const [isStartingChat, setIsStartingChat] = useState(false);
@@ -46,9 +48,6 @@ export default function ChatPage() {
     setMobileView("chat");
   };
 
-  const handleOpenLearning = () => {
-    setMobileView("learning");
-  };
 
   const handleBackToHome = () => {
     setMobileView("users");
@@ -62,27 +61,31 @@ export default function ChatPage() {
             selectedChatId={selectedChatId}
             onSelectChat={handleSelectChat}
             className="h-full"
-            onOpenLearning={handleOpenLearning}
+            onOpenProfile={() => setDesktopView("profile")}
           />
         </div>
         <div className="flex-1">
-          {mobileView === "learning" ? (
-             <LearningFeature 
-                onBack={() => {
-                  if (selectedChatId) {
-                    setMobileView("chat");
-                  } else {
-                    setMobileView("users"); 
-                  }
-                }} 
-                className="h-full" 
-             />
-          ) : (
-             <ChatFeature chatId={selectedChatId} recipientId={selectedProfileId} className="h-full" />
-          )}
+          <ChatFeature chatId={selectedChatId} recipientId={selectedProfileId} className="h-full" />
         </div>
-        <div className="w-80 border-r border-border">
-          <UsersFeature onStartChat={handleStartChat} />
+        <div className="flex-1 max-w-[430px] border-l border-border flex flex-col">
+          <DesktopSidebar
+            currentView={desktopView}
+            onViewChange={setDesktopView}
+          />
+          <div className="flex-1 overflow-hidden">
+            {desktopView === "users" && (
+              <UsersFeature onStartChat={handleStartChat} />
+            )}
+            {desktopView === "profile" && (
+              <MyAccountFeature />
+            )}
+            {desktopView === "learning" && (
+              <LearningFeature 
+                onBack={() => setDesktopView("users")} 
+                className="h-full" 
+              />
+            )}
+          </div>
         </div>
       </div>
 

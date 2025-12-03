@@ -140,7 +140,7 @@ export default function LoginPage() {
                 )}
               </Button>
 
-              <div className="relative flex items-center justify-center py-2">
+              {/* <div className="relative flex items-center justify-center py-2">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-border/30" />
                 </div>
@@ -172,8 +172,8 @@ export default function LoginPage() {
                   />
                 </svg>
                 Entrar com Google
-              </Button>
-            </div>
+              </Button> */}
+            </div> 
           </form>
 
           <div className="text-center pt-2">
