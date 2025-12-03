@@ -27,6 +27,12 @@ const ChatList = ({
     const { data: chats, isLoading } = useChats();
     const { data: session } = useSession();
     const currentProfileId = session?.user?.profile?.id;
+    const router = useRouter();
+    const profile = session?.user?.profile;
+    const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push('/login');
+  };
     const isMobileVariant = variant === "mobile";
 
     const userChats = (chats as ChatWithParticipants[] | undefined)?.filter((chat) =>
@@ -121,15 +127,16 @@ const ChatList = ({
             {!isMobileVariant && onOpenLearning && (
                 <div className="p-4 border-t border-border mt-auto">
                     <Button 
-                        onClick={onOpenLearning} 
-                        variant="outline" 
-                        className="w-full justify-start gap-2 h-12 shadow-sm"
+        variant="ghost"
+        size="sm"
+        onClick={handleSignOut}
+        className="gap-2 text-muted-foreground hover:text-foreground"
                     >
-                        <BookOpen className="h-5 w-5 text-primary" />
-                        <span>Meus Aprendizados</span>
+        <LogOut className="h-4 w-4" />
                     </Button>
                 </div>
             )}
+           
         </div>
     );
 };

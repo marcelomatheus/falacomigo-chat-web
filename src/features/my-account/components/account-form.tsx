@@ -81,14 +81,9 @@ export function AccountForm() {
                 : [...prev, langValue]
         );
     };
-
-    const getInitials = (name: string) => {
-        return name
-            .split(" ")
-            .map((n) => n[0])
-            .join("")
-            .toUpperCase()
-            .slice(0, 2);
+    const handleSignOut = async () => {
+    await signOut({ redirect: false });
+    router.push('/login');
     };
 
     if (isLoading) {
@@ -262,6 +257,13 @@ export function AccountForm() {
                         Salvar Alterações
                     </>
                 )}
+            </Button>
+            <Button
+        variant="ghost"
+        className="w-full h-12 text-base font-semibold border"
+        onClick={handleSignOut}
+      >
+        <LogOut className="h-4 w-4" /> Sair
             </Button>
         </div>
     );
