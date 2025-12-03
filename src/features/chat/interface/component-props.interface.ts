@@ -54,6 +54,10 @@ export interface ChatListProps {
   hideHeader?: boolean;
 }
 
+export interface ExtendedChatListProps extends ChatListProps {
+  onOpenProfile?: () => void;
+}
+
 export interface ChatHeaderProps {
   participantName: string;
   participantPhoto?: string | null;
