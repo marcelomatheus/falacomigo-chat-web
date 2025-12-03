@@ -8,6 +8,7 @@ import { ProfileWithUser } from "../interface/profile.interface";
 import { MessageCircle, ArrowLeft, Mail, Globe, Award, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LANGUAGE_NAMES } from "../constants";
+import { getInitials } from "@/lib/utils/string.utils";
 
 interface UserProfileProps {
   profile: ProfileWithUser;
@@ -22,15 +23,6 @@ export function UserProfile({
   onBack,
   className,
 }: UserProfileProps) {
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
-  };
-
   const formatDate = (date: Date | string) => {
     return new Date(date).toLocaleDateString("pt-BR", {
       day: "2-digit",
@@ -41,19 +33,16 @@ export function UserProfile({
 
   return (
     <div className={cn("flex flex-col h-full bg-background", className)}>
-      {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-border bg-card">
         {onBack && (
-          <Button variant="ghost" size="icon" onClick={onBack} className="md:hidden">
+          <Button variant="ghost" size="icon" onClick={onBack}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
         )}
         <h2 className="text-lg font-semibold">Perfil do Usuário</h2>
       </div>
 
-      {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Profile Header Card */}
         <Card>
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center space-y-4">
@@ -84,7 +73,6 @@ export function UserProfile({
           </CardContent>
         </Card>
 
-        {/* Learning Information */}
         <Card>
           <CardHeader>
             <h4 className="text-lg font-semibold flex items-center gap-2">
@@ -122,7 +110,6 @@ export function UserProfile({
           </CardContent>
         </Card>
 
-        {/* Known Languages */}
         {profile.knownLanguages && profile.knownLanguages.length > 0 && (
           <Card>
             <CardHeader>
@@ -140,7 +127,6 @@ export function UserProfile({
           </Card>
         )}
 
-        {/* Additional Info */}
         <Card>
           <CardHeader>
             <h4 className="text-lg font-semibold">Informações Adicionais</h4>
