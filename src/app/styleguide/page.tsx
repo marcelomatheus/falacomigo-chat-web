@@ -80,7 +80,7 @@ export default function StyleguidePage() {
           <div className="space-y-3 max-w-sm">
             <div>
               <Label htmlFor="email">E-mail</Label>
-              <Input id="email" type="email" placeholder="seu.email@example.com" className="h-12" />
+              <Input id="email" type="email" placeholder="Seu email" className="h-12" />
             </div>
             <div>
               <Label htmlFor="password">Senha</Label>

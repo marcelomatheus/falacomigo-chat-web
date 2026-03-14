@@ -20,7 +20,7 @@ export default withAuth(
             authorized: ({ token, req }) => {
                 const { pathname } = req.nextUrl;
 
-                if (pathname.startsWith('/login') || pathname.startsWith('/register')) {
+                if (pathname.startsWith('/login') || pathname.startsWith('/register') || pathname.startsWith('/auth/reset-password')) {
                     return true;
                 }
 

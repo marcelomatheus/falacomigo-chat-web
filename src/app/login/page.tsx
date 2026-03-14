@@ -6,6 +6,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { ForgotPasswordDialog } from "@/features/auth/components/forgot-password-dialog"
+import { LoginConfirmAccountDialog } from "@/features/auth/components/login-confirm-account-dialog"
+import { translateBackendMessage } from "@/features/auth/utils/error-message.utils"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -18,6 +21,39 @@ export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState("")
+  const [email, setEmail] = useState("")
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
+  const [pendingCredentials, setPendingCredentials] = useState<{
+    email: string
+    password: string
+  } | null>(null)
+
+  const handleAutoLoginAfterConfirmation = async () => {
+    if (!pendingCredentials) {
+      setErrorMessage("Não foi possível concluir o login automático. Tente novamente.")
+      return
+    }
+
+    const response = await signIn("credentials", {
+      redirect: false,
+      email: pendingCredentials.email,
+      password: pendingCredentials.password,
+    })
+
+    if (response?.error) {
+      setErrorMessage(
+        translateBackendMessage(
+          response.error,
+          "Não foi possível concluir o login automático. Tente novamente.",
+        ),
+      )
+      return
+    }
+
+    setPendingCredentials(null)
+    setConfirmDialogOpen(false)
+    router.push("/")
+  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -25,23 +61,41 @@ export default function LoginPage() {
     setErrorMessage("")
 
     const formData = new FormData(e.currentTarget)
-    const email = formData.get("email")
-    const password = formData.get("password")
+    const formEmail = String(formData.get("email") || "").trim()
+    const password = String(formData.get("password") || "")
+
+    if (!formEmail || !password) {
+      setErrorMessage("Informe email e senha para continuar.")
+      setIsLoading(false)
+      return
+    }
 
     try {
       const response = await signIn("credentials", {
         redirect: false,
-        email,
+        email: formEmail,
         password,
       })
 
       if (response?.error) {
-        setErrorMessage("Credenciais inválidas")
+        const translatedError = translateBackendMessage(
+          response.error,
+          "Credenciais inválidas.",
+        )
+
+        if (translatedError.toLowerCase().includes("confirme sua conta")) {
+          setPendingCredentials({ email: formEmail, password })
+          setConfirmDialogOpen(true)
+          setErrorMessage("")
+        } else {
+          setErrorMessage(translatedError)
+        }
+
         setIsLoading(false)
       } else {
         router.push("/")
       }
-    } catch (error) {
+    } catch {
       setErrorMessage("Ocorreu um erro inesperado. Tente novamente.")
       setIsLoading(false)
     }
@@ -91,7 +145,9 @@ export default function LoginPage() {
                   id="email"
                   name="email"
                   type="email"
-                  placeholder="seu.email@example.com"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="Seu email"
                   className="h-11 pl-10 bg-muted text-foreground border-muted placeholder:text-muted-foreground focus:border-primary"
                   required
                   disabled={isLoading}
@@ -139,6 +195,8 @@ export default function LoginPage() {
                   "Entrar"
                 )}
               </Button>
+
+              <ForgotPasswordDialog initialEmail={email} />
 
               {/* <div className="relative flex items-center justify-center py-2">
                 <div className="absolute inset-0 flex items-center">
@@ -188,6 +246,13 @@ export default function LoginPage() {
               </Button>
             </Link>
           </div>
+
+          <LoginConfirmAccountDialog
+            open={confirmDialogOpen}
+            onOpenChange={setConfirmDialogOpen}
+            email={pendingCredentials?.email ?? email}
+            onConfirmed={handleAutoLoginAfterConfirmation}
+          />
         </div>
       </div>
     </div>
