@@ -13,13 +13,15 @@ import { LANGUAGE_OPTIONS, LEVEL_OPTIONS } from "@/features/users/constants";
 import { toast } from "react-toastify";
 import { cn } from "@/lib/utils";
 import { signOut, useSession } from "next-auth/react";
-import router from "next/router";
 import { getInitials } from "@/lib/utils/string.utils";
+import { ConfirmAccountDialog } from "@/features/my-account/components/confirm-account-dialog";
+import { RequestResetPasswordDialog } from "@/features/my-account/components/request-reset-password-dialog";
+import { useRouter } from "next/navigation";
 
 export function AccountForm() {
     const { data: profile, isLoading } = useMyProfile();
     const { mutateAsync: updateProfile, isPending: isSaving } = useUpdateProfile();
-
+    const router = useRouter();
     const [name, setName] = useState<string>("");
     const [learningLang, setLearningLang] = useState<string>("");
     const [learningLevel, setLearningLevel] = useState<string>("");
@@ -248,6 +250,20 @@ export function AccountForm() {
                         </div>
                     </CardContent>
                 </Card>
+
+                {session?.user?.email ? (
+                    <Card>
+                        <CardHeader className="pb-3">
+                            <CardTitle className="text-lg">Segurança da Conta</CardTitle>
+                            <CardDescription>
+                                Solicite redefinição de senha.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+                            <RequestResetPasswordDialog email={session.user.email} />
+                        </CardContent>
+                    </Card>
+                ) : null}
             </div>
 
             <Button
