@@ -17,11 +17,19 @@ export const authOptions: NextAuthOptions = {
         if (!credentials || !credentials.email || !credentials.password) {
           return null;
         }
-        const user = await loginWithCredentials({
-          email: credentials.email as string,
-          password: credentials.password as string,
-        });
-        return user;
+        try {
+          const user = await loginWithCredentials({
+            email: credentials.email as string,
+            password: credentials.password as string,
+          });
+
+          return user;
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : 'Authentication failed';
+
+          throw new Error(message);
+        }
       },
     }),
   ],
