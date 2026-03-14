@@ -44,9 +44,16 @@ export default function RegisterPage() {
         }
 
         registerAction({ name, email, password })
-            .then(() => router.push("/login"))
+            .then((result) => {
+                if (!result.status) {
+                    throw new Error(result.error || "Erro ao cadastrar")
+                }
+
+                router.push(`/auth/confirm-account?email=${encodeURIComponent(email)}&fromRegister=true`)
+            })
             .catch((_error) => {
                 setErrorMessage("Houve um erro realizando seu cadastro. Tente novamente!")
+                setIsLoading(false)
                 setTimeout(() => {
                     setErrorMessage("")
                 }, 3000)
@@ -115,7 +122,7 @@ export default function RegisterPage() {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    placeholder="seu.email@example.com"
+                                    placeholder="Seu email"
                                     className="h-11 pl-10 bg-muted text-foreground border-muted placeholder:text-muted-foreground focus:border-primary"
                                     required
                                     disabled={isLoading}
